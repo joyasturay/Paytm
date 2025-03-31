@@ -1,26 +1,25 @@
 const express = require("express");
+require('dotenv').config();
 const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
-const userRouter=require('./routes/user');
+const userRouter = require('./routes/user');
 const accountRouter = require('./routes/accounts');
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Your frontend URL
+    origin: 'http://localhost:5173',
     credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//app.use('/user',userRouter);
-app.use('/api/v1/user',userRouter);
-app.use('/api/v1/account',accountRouter);
+app.use('/api/v1/user', userRouter);
+app.use('/api/v1/account', accountRouter);
 
 // MongoDB Connection
-const MONGO_URL = 'mongodb+srv://joyasturay999:iamjoy@cluster0.twymzrv.mongodb.net/paytm';
 async function connect() {
     try {
-        await mongoose.connect(MONGO_URL, {});
+        await mongoose.connect(process.env.MONGO_URL, {});
         console.log('MongoDB Connected');
     } catch (err) {
         console.error('Error connecting to MongoDB:', err);
@@ -43,8 +42,8 @@ process.on('SIGINT', async () => {
     process.exit(0);
 });
 
-app.listen(8080, () => {
-    console.log("Server started on port 8080");
+app.listen(process.env.PORT, () => {
+    console.log(`Server started on port ${process.env.PORT}`);
 });
 
 
